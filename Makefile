@@ -6,7 +6,7 @@ dev:
 
 PORT ?= 8000
 start:
-	uv run gunicorn -w 5 -b 0.0.0.0:8000 page_analyzer:app
+	uv run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 package-install:
 	python3 -m pip install --user dist/*.whl
