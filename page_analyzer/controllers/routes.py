@@ -27,11 +27,12 @@ params = {
 }
 
 conn = psycopg2.connect(**params)
-repo = UrlRepository(conn)
+
 
 
 @main_page.route("/", methods=["POST", "GET"])
 def m():
+    repo = UrlRepository(conn)
     if request.method == 'POST':
         data = request.form.to_dict()
         current_time = datetime.now()
@@ -55,25 +56,33 @@ def m():
                 repo.save(url)
                 existing = repo.get_specific_id(url['name'])
                 flash("Страница успешно добавлена", "success")
+                conn.close()
                 return redirect(url_for('/.url_id', id=existing[0]['id']))
             else:
                 flash("Страница уже существует", "error")
+                conn.close()
                 return redirect(url_for('/.url_id', id=existing_id[0]['id']))
         except Exception as e:     
             flash("URL превышает 255 символов", "error")
+            conn.close()
             return render_template('index.html'), 422
     else:
+        conn.close()
         return render_template('index.html'), 200
     
 
 @main_page.route('/urls', methods=['GET'])
 def url_list():
+    repo = UrlRepository(conn)
     k = repo.get_content()
     v = m()
+    conn.close()
     return render_template('//urls.html', k=k, m=v[1])
 
 @main_page.route('/urls/<id>', methods=['GET'])
 def url_id(id):
+    repo = UrlRepository(conn)
     k = repo.get_id(id)
+    conn.close()
     return render_template('//url.html', b=k)
     

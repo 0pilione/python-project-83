@@ -21,7 +21,9 @@ db_pool = pool.SimpleConnectionPool(minconn=1, maxconn=10, dsn=dsn_string)
 
 class UrlRepository:
     def __init__(self, conn):
-        self.conn = db_pool.getconn()
+        conn = db_pool.getconn()
+        self.conn = conn
+        
 
     def get_content(self):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
