@@ -1,9 +1,27 @@
 
 from psycopg2.extras import DictCursor
+from psycopg2 import pool
+from dotenv import load_dotenv
+import os
+import urllib.parse
+
+load_dotenv()
+url = os.environ.get('DATABASE_URL')
+host = os.environ.get('HOST')
+parsed_url = urllib.parse.urlparse(url)
+params = {
+    "database": parsed_url.path.lstrip('/'),  
+    "user": parsed_url.username,               
+    "password": parsed_url.password,           
+    "host": parsed_url.hostname,               
+    "port": parsed_url.port                    
+}
+dsn_string = "dbname={database} user={user} password={password} host={host}".format(**params)
+db_pool = pool.SimpleConnectionPool(minconn=1, maxconn=10, dsn=dsn_string)
 
 class UrlRepository:
     def __init__(self, conn):
-        self.conn = conn
+        self.conn = db_pool.getconn()
 
     def get_content(self):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
