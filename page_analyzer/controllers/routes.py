@@ -1,12 +1,15 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, Blueprint, get_flashed_messages
-from page_analyzer.models.repo import UrlRepository
-from validators import length
 import urllib.parse
 from datetime import datetime
 from urllib.parse import urlparse, urlunparse
-from page_analyzer.models.check_repo import UrlCheckRepository
+
 import requests
+from flask import (Flask, flash, get_flashed_messages, redirect, # noqa: F401
+                   render_template, request, url_for)
+from validators import length
+
 from page_analyzer.controllers.parsed_url import conn, main_page
+from page_analyzer.models.check_repo import UrlCheckRepository
+from page_analyzer.models.repo import UrlRepository
 
 
 @main_page.route("/", methods=["POST", "GET"])

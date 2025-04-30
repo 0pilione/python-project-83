@@ -1,10 +1,12 @@
-from flask import Flask, flash, redirect, url_for, get_flashed_messages
+from datetime import datetime
+
+import requests
+from flask import Flask, flash, get_flashed_messages, redirect, url_for # noqa: F401
+
+from page_analyzer.controllers.parsed_tags import ParsedTags
+from page_analyzer.controllers.parsed_url import check_page, conn
 from page_analyzer.models.check_repo import UrlCheckRepository
 from page_analyzer.models.repo import UrlRepository
-from datetime import datetime
-import requests
-from page_analyzer.controllers.parsed_tags import ParsedTags
-from page_analyzer.controllers.parsed_url import conn, check_page
 
 
 @check_page.route('/urls/<int:id>/checks', methods=['POST'])
@@ -17,17 +19,18 @@ def save_check(id):
         flash("Произошла ошибка при проверке", "danger")
     else:
         check = {
-        "url_id": id,
-        'status_code': response,
-        'h1': parsed_tags.h1(),
-        'title': parsed_tags.title(),
-        'description': parsed_tags.description(),
-        'created_at': current_time
-    }
+            "url_id": id,
+            'status_code': response,
+            'h1': parsed_tags.h1(),
+            'title': parsed_tags.title(),
+            'description': parsed_tags.description(),
+            'created_at': current_time
+        }
         repo.save(check)
         flash("Страница успешно проверена", "success")
     conn.close()
     return redirect(url_for('/.url_id', id=id))
+
 
 def check_response(id):
     repo = UrlRepository(conn)
@@ -38,7 +41,7 @@ def check_response(id):
         response = requests.get(check_name, timeout=10)
         response.raise_for_status()
         return response.status_code
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException:
         return 'failed request'
-    except Exception as e:
+    except Exception:
         return 'failed'

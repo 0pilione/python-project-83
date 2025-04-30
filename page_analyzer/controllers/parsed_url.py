@@ -1,8 +1,9 @@
-from flask import Blueprint
-from dotenv import load_dotenv
 import os
 from urllib.parse import urlparse
+
 import psycopg2
+from dotenv import load_dotenv
+from flask import Blueprint
 
 check_page = Blueprint('checks', __name__, template_folder='templates')
 main_page = Blueprint('/', __name__, template_folder='templates')

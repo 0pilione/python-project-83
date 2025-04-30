@@ -1,7 +1,8 @@
-from psycopg2 import pool
-from dotenv import load_dotenv
 import os
 import urllib.parse
+
+from dotenv import load_dotenv
+from psycopg2 import pool
 
 load_dotenv()
 url = os.environ.get('DATABASE_URL')

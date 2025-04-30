@@ -1,6 +1,8 @@
 
 from psycopg2.extras import DictCursor
+
 from page_analyzer.models.pool import db_pool
+
 
 class UrlRepository:
     def __init__(self, conn):

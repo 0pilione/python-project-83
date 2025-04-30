@@ -1,7 +1,7 @@
-from page_analyzer.models.repo import UrlRepository
 import requests
 from bs4 import BeautifulSoup
 
+from page_analyzer.models.repo import UrlRepository
 
 
 class ParsedTags:
