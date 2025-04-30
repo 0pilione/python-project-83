@@ -12,7 +12,7 @@ package-install:
 	python3 -m pip install --user dist/*.whl
 
 lint:
-	uv run flake8 hexlet-code
+	uv run flake8
 
 check:
 	make lint
