@@ -17,9 +17,6 @@ lint:
 check:
 	make lint
 
-test-coverage:
-	uv run pytest --cov=??? --cov-report xml
-
 build:
 	./build.sh
 
