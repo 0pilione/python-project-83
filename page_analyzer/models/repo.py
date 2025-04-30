@@ -5,26 +5,26 @@ from page_analyzer.models.pool import db_pool
 
 
 class UrlRepository:
+
     def __init__(self, conn):
         conn = db_pool.getconn()
         self.conn = conn
-        
 
     def get_content(self):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute("SELECT * FROM urls ORDER BY created_at DESC")
             return [dict(row) for row in cur]
-        
+
     def get_id(self, id):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute("SELECT * FROM urls WHERE id = %s", (id,))
-            return [dict(row) for row in cur]       
-        
+            return [dict(row) for row in cur]
+
     def get_specific_id(self, name):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute("SELECT id FROM urls WHERE name = %s", (name,))
-            return [dict(row) for row in cur]   
-        
+            return [dict(row) for row in cur]
+
     def save(self, url):
         if "id" in url and url["id"]:
             self._update(url)
@@ -42,7 +42,8 @@ class UrlRepository:
     def _create(self, url):
         with self.conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO urls (name, created_at) VALUES (%s, %s) RETURNING id",
+                """INSERT INTO urls (name, created_at)
+                VALUES (%s, %s) RETURNING id""",
                 (url["name"], url["created_at"]),
             )
             id = cur.fetchone()[0]

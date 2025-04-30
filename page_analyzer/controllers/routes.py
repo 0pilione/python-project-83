@@ -1,9 +1,9 @@
-import urllib.parse
+import urllib  # noqa: F401
 from datetime import datetime
 from urllib.parse import urlparse, urlunparse
 
-import requests
-from flask import (Flask, flash, get_flashed_messages, redirect, # noqa: F401
+import requests  # noqa: F401
+from flask import (Flask, flash, get_flashed_messages, redirect,  # noqa: F401
                    render_template, request, url_for)
 from validators import length
 
@@ -34,28 +34,29 @@ def save_url():
                 flash("Страница уже существует", "danger")
                 conn.close()
                 return redirect(url_for('/.url_id', id=existing_id[0]['id']))
-        except Exception as e:     
+        except Exception:
             flash("URL превышает 255 символов", "danger")
             conn.close()
             return render_template('index.html')
     else:
         conn.close()
         return render_template('index.html')
-    
+
 
 def normalized_url(data):
     lower_case_url = data['url'].lower()
     parsed_url = urlparse(lower_case_url)
     components = (
-        parsed_url.scheme or 'https',           
-        parsed_url.netloc.rstrip(':80').rstrip(':443'),  
-        parsed_url.path.rstrip('/'),           
-        '',                                   
-        parsed_url.query,                     
+        parsed_url.scheme or 'https',
+        parsed_url.netloc.rstrip(':80').rstrip(':443'),
+        parsed_url.path.rstrip('/'),
+        '',
+        parsed_url.query,
         ''
     )
     normalized_url = urlunparse(components)
     return normalized_url
+
 
 @main_page.route('/urls', methods=['GET'])
 def url_list():
@@ -63,8 +64,9 @@ def url_list():
     repo_2 = UrlCheckRepository(conn)
     content = repo.get_content()
     url_list = [repo_2.get_check_id(check['id']) for check in content]
-    conn.close()  
+    conn.close()
     return render_template('urls.html', content=content, urls=url_list)
+
 
 @main_page.route('/urls/<id>', methods=['GET'])
 def url_id(id):
@@ -74,4 +76,3 @@ def url_id(id):
     url = repo.get_id(id)
     conn.close()
     return render_template('//url.html', url_id=url, check_id=check_id)
-

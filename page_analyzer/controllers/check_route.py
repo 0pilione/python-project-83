@@ -1,7 +1,8 @@
 from datetime import datetime
 
 import requests
-from flask import Flask, flash, get_flashed_messages, redirect, url_for # noqa: F401
+from flask import (Flask, flash, get_flashed_messages,  # noqa: F401
+                   redirect, url_for)
 
 from page_analyzer.controllers.parsed_tags import ParsedTags
 from page_analyzer.controllers.parsed_url import check_page, conn

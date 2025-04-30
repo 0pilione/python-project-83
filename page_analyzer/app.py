@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, Flask # noqa: F401
+from flask import Blueprint, Flask  # noqa: F401
 
 from page_analyzer.controllers.check_route import check_page
 from page_analyzer.controllers.routes import main_page
