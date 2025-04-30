@@ -8,44 +8,76 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <a class="nav-link fs-5 text-success" style="font-family:'Helvetica Neue'" href="/">Анализатор страниц</a>
-            <a class="nav-link fs-5 text-success" style="font-family:'Helvetica Neue'" href="/urls">Сайты</a>
+            <a class="nav-link fs-5 text-light" style="font-family:'Helvetica Neue'" href="/">Анализатор страниц</a>
+            <a class="nav-link fs-5 text-light" style="font-family:'Helvetica Neue'" href="/urls">Сайты</a>
           </ul>
         </div>
     </nav>
     {% with messages = get_flashed_messages(with_categories=true) %}
     <ul class="flashes">
         {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
+        <div class="alert alert-{{category}} alert-dismissible fade show rounded-0 m-0" role="alert">{{ message }}</div>
         {% endfor %}
     </ul>
 {% endwith %}
   </head>
-  <body class='bg-secondary'>
-    {% for i in b %}
+  <body class='bg-light'>
+    {% for url in url_id %}
     <div class="container">
         <div class='row'>
     
     <table class="table table-bordered">
         
-        <h2>{{i['name']}}</h2>
+        <h2>{{url['name']}}</h2>
         <div class='table-responsive'>
         <table class="table table-bordered table-hover text-nowrap" data-test="url">
             <tbody>
                 <tr>
                     <th>id</th>
-                    <td>{{i['id']}}</td>
+                    <td>{{url['id']}}</td>
                 </tr>
                 <tr>
                     <th>Имя</th>
-                    <td>{{i['name']}}</td>
+                    <td>{{url['name']}}</td>
                 </tr>
             <tr>
                     <th>Дата создания</td>
-                        <td>{{i['created_at']}}</td>
+                        <td>{{url['created_at']}}</td>
                 </tr>
-            </body>
+            </tbody>
         </table>
+        <h1>Проверки</h1>
+        {% for url_2 in url_id %}
+        <form method="POST" action="{{ url_for('checks.save_check', id=url_2['id']) }}">
+          <input type="submit" class="btn btn-primary" value="Запустить проверку">
+        </form>
+        
+        <table class="table table-bordered table-hover mt-2" data-test="checks">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Код ответа</th>
+                <th>h1</th>
+                <th>title</th>
+                <th>description</th>
+                <th>Дата создания</th>
+              </tr>
+            </thead>
+              <tbody>
+                
+            {% for id_information in check_id %}
+            <tr>
+                <td>{{id_information.id or ''}}</td>
+                <td>{{id_information.status_code or ''}}</td>
+                <td>{{id_information.h1 or ''}}</td>
+                <td>{{id_information.title or ''}}</td>
+                <td>{{id_information.description or ''}}</td>
+                <td>{{id_information.created_at or ''}}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+            </tbody>
+            </table>
     </div>
     </div>
         </div>

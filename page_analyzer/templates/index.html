@@ -8,32 +8,32 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <a class="nav-link fs-5 text-success" style="font-family:'Helvetica Neue'" href="/">Анализатор страниц</a>
-            <a class="nav-link fs-5 text-success" style="font-family:'Helvetica Neue'" href="/urls">Сайты</a>
+            <a class="nav-link fs-5 text-light" style="font-family:'Helvetica Neue'" href="/">Анализатор страниц</a>
+            <a class="nav-link fs-5 text-light" style="font-family:'Helvetica Neue'" href="/urls">Сайты</a>
           </ul>
         </div>
     </nav>
     {% with messages = get_flashed_messages(with_categories=true) %}
     <ul class="flashes">
         {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
+        <div class="alert alert-{{category}} alert-dismissible fade show rounded-0 m-0" role="alert">{{ message }}</div>
         {% endfor %}
     </ul>
 {% endwith %}
   </head>
 
-  <body class='bg-secondary'>
+  <body class='bg-light'>
     <div class="container">
       <div class="row justify-content-center">
-          <div class="card text-white bg-dark" style="height: 30vh; width: 50vw">
+          <div class="card text-dark bg-white" style="height: 30vh; width: 50vw">
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
               <h5 class="card-title fs-2" style="font-family:'Helvetica Neue'">Анализатор страниц</h5>
               <p class="card-text fs-4" style="font-family:'Helvetica Neue'">Бесплатно проверяйте сайты на SEO-пригодность</p>
               <div class="row">
               <form class="d-flex fs-4" role="search" method="post">
               <label for="text" class="visually-hidden">Url для проверки</label>
-              <input class="form-control me-2 fs-4" id='namme' type="url" style="font-family:'Helvetica Neue'" name='url' placeholder="https//www.example.com" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit" style="font-family:'Helvetica Neue'">Проверить</button>
+              <input class="form-control me-2 fs-4" type="url" style="font-family:'Helvetica Neue'" name='url' placeholder="https//www.example.com" aria-label="Search" required>
+              <button class="btn btn-primary" type="submit" style="font-family:'Helvetica Neue'">Проверить</button>
               </form>
               <main class="col">
               <div class="container mt-4">

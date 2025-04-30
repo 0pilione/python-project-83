@@ -8,38 +8,63 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <a class="nav-link fs-5 text-success" style="font-family:'Helvetica Neue'" href="/">Анализатор страниц</a>
-            <a class="nav-link fs-5 text-success" style="font-family:'Helvetica Neue'" href="/urls">Сайты</a>
+            <a class="nav-link fs-5 text-light" style="font-family:'Helvetica Neue'" href="/">Анализатор страниц</a>
+            <a class="nav-link fs-5 text-light" style="font-family:'Helvetica Neue'" href="/urls">Сайты</a>
           </ul>
         </div>
     </nav>
   </head>
-  <body class='bg-secondary'>
+  <body class='bg-light'>
     
     <div class="container">
         <div class='row'>
-    <table class="table table-bordered">
-        <h2>Сайты</h2>
-        <table class="table table-bordered table-hover" data-test="urls">
-            <thead>
-                <tr>
-                    <th scope="col">id</th>
-                    <th scope="col">Имя</th>
-                    <th scope="col">Последняя проверка</th>
-                    <th scope="col">Код ответа</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in k %}
-                <tr>
-                    <td>{{i['id']}}</td>
-                    <td><a href="/urls/{{i['id']}}">{{i['name']}}</a></td>
-                    <td>{{i['name']}}</td>
-                    <td>{{m}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <h2>Сайты</h2>
+            <table class="table table-bordered table-hover" data-test="urls">
+                <thead>
+                    <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Последняя проверка</th>
+                        <th scope="col">Код ответа</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for site in content %}
+                    <tr>
+                        <td>{{ site['id'] }}</td>
+                        <td><a href="/urls/{{ site['id'] }}">{{ site['name'] }}</a></td>
+                        <td>
+                            {% set found_check = false %}
+                            {% for check_group in urls %}
+                                {% for check in check_group %}
+                                    {% if site['id'] == check.url_id %}
+                                        {% if loop.first %}
+                                            {{ check.created_at or '' }}
+                                            {% set found_check = true %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            {% if not found_check %}{% endif %}
+                        </td>
+                        <td>
+                            {% set found_check = false %}
+                            {% for check_group in urls %}
+                                {% for check in check_group %}
+                                    {% if site['id'] == check.url_id %}
+                                        {% if loop.first %}
+                                            {{ check.status_code or '' }}
+                                            {% set found_check = true %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            {% if not found_check %}{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
     </div>
         </div>
     </div>
