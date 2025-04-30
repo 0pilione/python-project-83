@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [tool.uv.workspace]
-members = ["page_analyzer"]
+members = ["python-project-83"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["page_analyzer"]
