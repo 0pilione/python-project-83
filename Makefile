@@ -12,7 +12,7 @@ package-install:
 	python3 -m pip install --user dist/*.whl
 
 lint:
-	uv run flake8
+	uv run flake8 page_analyzer
 
 check:
 	make lint
