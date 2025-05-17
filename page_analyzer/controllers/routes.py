@@ -25,6 +25,9 @@ def save_url():
             existing_urls = [u['name'] for u in repo.get_content()]
             existing_id = repo.get_specific_id(url['name'])
             if url['name'] not in existing_urls:
+                checked_url = is_valid_url(url['name'])
+                if checked_url is False:
+                    flash('Некорретный URL', 'danger')
                 repo.save(url)
                 existing = repo.get_specific_id(url['name'])
                 flash("Страница успешно добавлена", "success")
@@ -41,6 +44,14 @@ def save_url():
     else:
         conn.close()
         return render_template('index.html')
+
+
+def is_valid_url(url):
+    try:
+        result = urlparse(url)
+        return result
+    except ValueError:
+        return False
 
 
 def normalized_url(data):
