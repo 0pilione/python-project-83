@@ -25,7 +25,7 @@ def save_url():
             if not validate_url(url):
                 flash("Некорретный URL", "danger")
                 conn.close()
-                return render_template('index.html')  
+                return render_template('index.html'), 422 
             url = {"name": url,  'created_at': current_time}
             existing_urls = [u['name'] for u in repo.get_content()]
             existing_id = repo.get_specific_id(url['name'])
