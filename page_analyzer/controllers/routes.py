@@ -28,6 +28,8 @@ def save_url():
                 checked_url = is_valid_url(url['name'])
                 if checked_url is False:
                     flash('Некорретный URL', 'danger')
+                    conn.close()
+                    return redirect(url_for('/'))
                 repo.save(url)
                 existing = repo.get_specific_id(url['name'])
                 flash("Страница успешно добавлена", "success")
