@@ -39,7 +39,7 @@ def check_response(id):
     for check in get_check:
         check_name = check['name']
     try:
-        response = requests.get(check_name, timeout=10)
+        response = requests.get(check_name, timeout=3)
         response.raise_for_status()
         return response.status_code
     except requests.exceptions.RequestException:
