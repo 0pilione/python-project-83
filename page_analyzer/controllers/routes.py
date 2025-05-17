@@ -7,6 +7,7 @@ from flask import (Flask, flash, get_flashed_messages, redirect,  # noqa: F401
                    render_template, request, url_for)
 from validators import length
 from validators import url as validate_url
+from validators.utils import ValidationError
 
 from page_analyzer.controllers.parsed_url import conn, main_page
 from page_analyzer.models.check_repo import UrlCheckRepository
@@ -22,10 +23,10 @@ def save_url():
         current_time = datetime.now()
         try:
             length(url, min=3, max=255)
-            if not validate_url(url):
+            if not is_valid_url(url):
                 flash("Некорретный URL", "danger")
                 conn.close()
-                return render_template('index.html'), 422 
+                return render_template('index.html') 
             url = {"name": url,  'created_at': current_time}
             existing_urls = [u['name'] for u in repo.get_content()]
             existing_id = repo.get_specific_id(url['name'])
@@ -46,6 +47,14 @@ def save_url():
     else:
         conn.close()
         return render_template('index.html')
+    
+    
+def is_valid_url(url):
+    """Проверка URL с помощью библиотеки validators"""
+    try:
+        return validate_url(url)
+    except ValidationError:
+        return False
 
 
 def normalized_url(data):
