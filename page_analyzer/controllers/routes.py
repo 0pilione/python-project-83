@@ -49,9 +49,9 @@ def normalized_url(data):
     components = (
         parsed_url.scheme or 'https',
         parsed_url.netloc.rstrip(':80').rstrip(':443'),
-        parsed_url.path.rstrip('/'),
         '',
-        parsed_url.query,
+        '',
+        '',
         ''
     )
     normalized_url = urlunparse(components)
