@@ -19,30 +19,30 @@ def save_url():
         data = request.form.to_dict()
         url = normalized_url(data)
         current_time = datetime.now()
-        try:
-            length(url, min=3, max=255)
-            url = {"name": url,  'created_at': current_time}
-            existing_urls = [u['name'] for u in repo.get_content()]
-            existing_id = repo.get_specific_id(url['name'])
-            if url['name'] not in existing_urls:
-                checked_url = is_valid_url(url['name'])
-                if checked_url is False:
-                    flash('Некорретный URL', 'danger')
-                    conn.close()
-                    return redirect(url_for('/'))
-                repo.save(url)
-                existing = repo.get_specific_id(url['name'])
-                flash("Страница успешно добавлена", "success")
-                conn.close()
-                return redirect(url_for('/.url_id', id=existing[0]['id']))
-            else:
-                flash("Страница уже существует", "danger")
-                conn.close()
-                return redirect(url_for('/.url_id', id=existing_id[0]['id']))
-        except Exception:
-            flash("URL превышает 255 символов", "danger")
+        if is_valid_url(data) is False:
+            flash("Некорретный URL", "danger")
             conn.close()
             return render_template('index.html')
+        else:
+            try:
+                length(url, min=3, max=255)
+                url = {"name": url,  'created_at': current_time}
+                existing_urls = [u['name'] for u in repo.get_content()]
+                existing_id = repo.get_specific_id(url['name'])
+                if url['name'] not in existing_urls:
+                    repo.save(url)
+                    existing = repo.get_specific_id(url['name'])
+                    flash("Страница успешно добавлена", "success")
+                    conn.close()
+                    return redirect(url_for('/.url_id', id=existing[0]['id']))
+                else:
+                    flash("Страница уже существует", "danger")
+                    conn.close()
+                    return redirect(url_for('/.url_id', id=existing_id[0]['id']))
+            except Exception:
+                flash("URL превышает 255 символов", "danger")
+                conn.close()
+                return render_template('index.html')
     else:
         conn.close()
         return render_template('index.html')
