@@ -19,7 +19,7 @@ def save_url():
         data = request.form.to_dict()
         url = normalized_url(data)
         current_time = datetime.now()
-        if is_valid_url(data) is False:
+        if is_valid_url(data['url']) is False:
             flash("Некорретный URL", "danger")
             conn.close()
             return render_template('index.html')
