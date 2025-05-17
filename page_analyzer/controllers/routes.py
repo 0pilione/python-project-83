@@ -6,6 +6,7 @@ import requests  # noqa: F401
 from flask import (Flask, flash, get_flashed_messages, redirect,  # noqa: F401
                    render_template, request, url_for)
 from validators import length
+from validators import url as validate_url
 
 from page_analyzer.controllers.parsed_url import conn, main_page
 from page_analyzer.models.check_repo import UrlCheckRepository
@@ -19,41 +20,32 @@ def save_url():
         data = request.form.to_dict()
         url = normalized_url(data)
         current_time = datetime.now()
-        if is_valid_url(data['url']) is False:
-            flash("Некорретный URL", "danger")
+        try:
+            length(url, min=3, max=255)
+            if not validate_url(url):
+                flash("Некорретный URL", "danger")
+                conn.close()
+                return render_template('index.html')  
+            url = {"name": url,  'created_at': current_time}
+            existing_urls = [u['name'] for u in repo.get_content()]
+            existing_id = repo.get_specific_id(url['name'])
+            if url['name'] not in existing_urls:
+                repo.save(url)
+                existing = repo.get_specific_id(url['name'])
+                flash("Страница успешно добавлена", "success")
+                conn.close()
+                return redirect(url_for('/.url_id', id=existing[0]['id']))
+            else:
+                flash("Страница уже существует", "danger")
+                conn.close()
+                return redirect(url_for('/.url_id', id=existing_id[0]['id']))
+        except Exception:
+            flash("URL превышает 255 символов", "danger")
             conn.close()
             return render_template('index.html')
-        else:
-            try:
-                length(url, min=3, max=255)
-                url = {"name": url,  'created_at': current_time}
-                existing_urls = [u['name'] for u in repo.get_content()]
-                existing_id = repo.get_specific_id(url['name'])
-                if url['name'] not in existing_urls:
-                    repo.save(url)
-                    existing = repo.get_specific_id(url['name'])
-                    flash("Страница успешно добавлена", "success")
-                    conn.close()
-                    return redirect(url_for('/.url_id', id=existing[0]['id']))
-                else:
-                    flash("Страница уже существует", "danger")
-                    conn.close()
-                    return redirect(url_for('/.url_id', id=existing_id[0]['id']))
-            except Exception:
-                flash("URL превышает 255 символов", "danger")
-                conn.close()
-                return render_template('index.html')
     else:
         conn.close()
         return render_template('index.html')
-
-
-def is_valid_url(url):
-    try:
-        result = urlparse(url)
-        return result
-    except ValueError:
-        return False
 
 
 def normalized_url(data):
