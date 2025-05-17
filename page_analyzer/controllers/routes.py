@@ -31,7 +31,7 @@ def save_url():
                 conn.close()
                 return redirect(url_for('/.url_id', id=existing[0]['id']))
             else:
-                flash("Страница уже существует", "info")
+                flash("Страница уже существует", "danger")
                 conn.close()
                 return redirect(url_for('/.url_id', id=existing_id[0]['id']))
         except Exception:
