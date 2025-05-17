@@ -1,27 +1,20 @@
-
-from psycopg2.extras import DictCursor
-
-from page_analyzer.models.pool import db_pool
+from page_analyzer.models.base_repo import BaseRepository
 
 
-class UrlRepository:
-
-    def __init__(self, conn):
-        conn = db_pool.getconn()
-        self.conn = conn
+class UrlRepository(BaseRepository):
 
     def get_content(self):
-        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self.get_cursor() as cur:
             cur.execute("SELECT * FROM urls ORDER BY created_at DESC")
             return [dict(row) for row in cur]
 
     def get_id(self, id):
-        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self.get_cursor() as cur:
             cur.execute("SELECT * FROM urls WHERE id = %s", (id,))
             return [dict(row) for row in cur]
 
     def get_specific_id(self, name):
-        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self.get_cursor() as cur:
             cur.execute("SELECT id FROM urls WHERE name = %s", (name,))
             return [dict(row) for row in cur]
 
@@ -32,15 +25,14 @@ class UrlRepository:
             self._create(url)
 
     def _update(self, url):
-        with self.conn.cursor() as cur:
+        with self.get_cursor() as cur:
             cur.execute(
                 "UPDATE  SET name = %s, created_at = %s WHERE id = %s",
                 (url["id"], url["name"], url["created_at"]),
             )
-        self.conn.commit()
 
     def _create(self, url):
-        with self.conn.cursor() as cur:
+        with self.get_cursor() as cur:
             cur.execute(
                 """INSERT INTO urls (name, created_at)
                 VALUES (%s, %s) RETURNING id""",
@@ -48,4 +40,3 @@ class UrlRepository:
             )
             id = cur.fetchone()[0]
             url["id"] = id
-        self.conn.commit()

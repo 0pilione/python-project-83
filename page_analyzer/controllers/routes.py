@@ -15,7 +15,7 @@ from page_analyzer.models.repo import UrlRepository
 @main_page.route("/", methods=["POST", "GET"])
 def save_url():
     if request.method == 'POST':
-        repo = UrlRepository(conn)
+        repo = UrlRepository()
         data = request.form.to_dict()
         url = normalized_url(data)
         current_time = datetime.now()
@@ -60,8 +60,8 @@ def normalized_url(data):
 
 @main_page.route('/urls', methods=['GET'])
 def url_list():
-    repo = UrlRepository(conn)
-    repo_2 = UrlCheckRepository(conn)
+    repo = UrlRepository()
+    repo_2 = UrlCheckRepository()
     content = repo.get_content()
     url_list = [repo_2.get_check_id(check['id']) for check in content]
     conn.close()
@@ -70,8 +70,8 @@ def url_list():
 
 @main_page.route('/urls/<id>', methods=['GET'])
 def url_id(id):
-    repo = UrlRepository(conn)
-    repo_2 = UrlCheckRepository(conn)
+    repo = UrlRepository()
+    repo_2 = UrlCheckRepository()
     check_id = repo_2.get_check_id(id)
     url = repo.get_id(id)
     conn.close()

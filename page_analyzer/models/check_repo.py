@@ -1,15 +1,10 @@
-from psycopg2.extras import DictCursor
-
-from page_analyzer.models.pool import db_pool
+from page_analyzer.models.base_repo import BaseRepository
 
 
-class UrlCheckRepository:
-    def __init__(self, conn):
-        conn = db_pool.getconn()
-        self.conn = conn
+class UrlCheckRepository(BaseRepository):
 
     def get_check_id(self, id):
-        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self.get_cursor() as cur:
             cur.execute(
                 "SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC ",
                 (id,)
@@ -23,7 +18,7 @@ class UrlCheckRepository:
             self._create(check)
 
     def _update(self, check):
-        with self.conn.cursor() as cur:
+        with self.get_cursor() as cur:
             cur.execute(
                 """
                 UPDATE url_checks
@@ -45,10 +40,9 @@ class UrlCheckRepository:
                     check['id']
                 ),
             )
-        self.conn.commit()
 
     def _create(self, check):
-        with self.conn.cursor() as cur:
+        with self.get_cursor() as cur:
             cur.execute(
                 """
                 INSERT INTO url_checks (
@@ -70,6 +64,5 @@ class UrlCheckRepository:
                     check["created_at"],
                 ),
             )
-        id = cur.fetchone()[0]
-        check["id"] = id
-        self.conn.commit()
+            id = cur.fetchone()[0]
+            check["id"] = id

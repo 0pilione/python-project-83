@@ -1,8 +1,8 @@
 from datetime import datetime
 
 import requests
-from flask import (Flask, flash, get_flashed_messages,  # noqa: F401
-                   redirect, url_for)
+from flask import (Flask, flash, get_flashed_messages, redirect,  # noqa: F401
+                   url_for)
 
 from page_analyzer.controllers.parsed_tags import ParsedTags
 from page_analyzer.controllers.parsed_url import check_page, conn
@@ -13,9 +13,9 @@ from page_analyzer.models.repo import UrlRepository
 @check_page.route('/urls/<int:id>/checks', methods=['POST'])
 def save_check(id):
     current_time = datetime.now()
-    repo = UrlCheckRepository(conn)
+    repo = UrlCheckRepository()
     response = check_response(id)
-    parsed_tags = ParsedTags(id, conn)
+    parsed_tags = ParsedTags(id)
     if isinstance(response, str):
         flash("Произошла ошибка при проверке", "danger")
     else:
@@ -34,7 +34,7 @@ def save_check(id):
 
 
 def check_response(id):
-    repo = UrlRepository(conn)
+    repo = UrlRepository()
     get_check = repo.get_id(id)
     for check in get_check:
         check_name = check['name']

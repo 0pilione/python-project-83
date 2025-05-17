@@ -6,9 +6,8 @@ from page_analyzer.models.repo import UrlRepository
 
 class ParsedTags:
 
-    def __init__(self, id, conn):
-        self.conn = conn
-        self.repo = UrlRepository(self.conn)
+    def __init__(self, id):
+        self.repo = UrlRepository()
         self.id = id
 
     def base(self):

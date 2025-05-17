@@ -18,7 +18,7 @@ check:
 	make lint
 
 test-coverage:
-		uv run pytest
+	uv run pytest
 
 build:
 	./build.sh
