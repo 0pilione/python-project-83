@@ -83,7 +83,7 @@ def uncorrect_url():
 @main_page.route('/urls', methods=['GET'])
 def url_list():
     if session.pop('from_uncorrect_url', False):
-        return render_template('index.html')
+        return render_template('index.html'), 422
     repo = UrlRepository()
     repo_2 = UrlCheckRepository()
     content = repo.get_content()
