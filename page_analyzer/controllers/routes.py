@@ -24,7 +24,7 @@ def save_url():
         if not is_valid_url(data['url']):
             flash("Некорректный URL", "danger")
             session['from_uncorrect_url'] = True
-            return redirect(url_for('/.url_list'))
+            return redirect(url_for('/.url_list')), 422
         try:
             length(url, min=3, max=255)
             url = {"name": url,  'created_at': current_time}
@@ -76,7 +76,6 @@ def normalized_url(data):
 def uncorrect_url():
     data = request.form.to_dict()
     if not is_valid_url(data['url']):
-        flash("Некорректный URL", "danger")
         conn.close()
         return render_template('index.html')
 
