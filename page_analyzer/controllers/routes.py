@@ -4,7 +4,7 @@ from urllib.parse import urlparse, urlunparse
 
 import requests  # noqa: F401
 from flask import (Flask, flash, get_flashed_messages, redirect,  # noqa: F401
-                   render_template, request, url_for)
+                   render_template, request, url_for, session)
 from validators import length
 from validators import url as validate_url
 from validators.utils import ValidationError
@@ -21,8 +21,12 @@ def save_url():
         data = request.form.to_dict()
         url = normalized_url(data)
         current_time = datetime.now()
+        if not is_valid_url(data['url']):
+            flash("Некорректный URL", "danger")
+            session['from_uncorrect_url'] = True
+            return redirect(url_for('/.url_list'))
         try:
-            length(url, min=3, max=255) 
+            length(url, min=3, max=255)
             url = {"name": url,  'created_at': current_time}
             existing_urls = [u['name'] for u in repo.get_content()]
             existing_id = repo.get_specific_id(url['name'])
@@ -43,8 +47,8 @@ def save_url():
     else:
         conn.close()
         return render_template('index.html')
-    
-    
+
+
 def is_valid_url(url):
     """Проверка URL с помощью библиотеки validators"""
     try:
@@ -68,8 +72,19 @@ def normalized_url(data):
     return normalized_url
 
 
+@main_page.route('/urls', methods=['POST'])
+def uncorrect_url():
+    data = request.form.to_dict()
+    if not is_valid_url(data['url']):
+        flash("Некорректный URL", "danger")
+        conn.close()
+        return render_template('index.html')
+
+
 @main_page.route('/urls', methods=['GET'])
 def url_list():
+    if session.pop('from_uncorrect_url', False):
+        return render_template('index.html')
     repo = UrlRepository()
     repo_2 = UrlCheckRepository()
     content = repo.get_content()
