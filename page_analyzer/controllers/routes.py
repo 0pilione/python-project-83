@@ -24,9 +24,7 @@ def save_url():
         try:
             length(url, min=3, max=255)
             if not is_valid_url(url):
-                flash("Некорретный URL", "danger")
-                conn.close()
-                return render_template('index.html') 
+                return redirect(url_for('/.url_list'))
             url = {"name": url,  'created_at': current_time}
             existing_urls = [u['name'] for u in repo.get_content()]
             existing_id = repo.get_specific_id(url['name'])
@@ -74,6 +72,10 @@ def normalized_url(data):
 
 @main_page.route('/urls', methods=['GET'])
 def url_list():
+    url = request.args.get('url')
+    if not is_valid_url(url):
+        flash("Некорректный URL", "danger")
+        return render_template('index.html')
     repo = UrlRepository()
     repo_2 = UrlCheckRepository()
     content = repo.get_content()
