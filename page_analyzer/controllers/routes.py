@@ -24,7 +24,7 @@ def save_url():
         if not is_valid_url(data['url']):
             flash("Некорректный URL", "danger")
             session['from_uncorrect_url'] = True
-            return redirect(url_for('/.url_list')), 422
+            return redirect(url_for('/.url_list'))
         try:
             length(url, min=3, max=255)
             url = {"name": url,  'created_at': current_time}
