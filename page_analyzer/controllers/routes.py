@@ -27,7 +27,7 @@ def save_url():
             return redirect(url_for('/.url_list'))
         try:
             length(url, min=3, max=255)
-            url = {"name": url,  'created_at': current_time}
+            url = {"name": url, 'created_at': current_time}
             existing_urls = [u['name'] for u in repo.get_content()]
             existing_id = repo.get_specific_id(url['name'])
             if url['name'] not in existing_urls:
