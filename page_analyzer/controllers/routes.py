@@ -16,6 +16,7 @@ from page_analyzer.models.repo import UrlRepository
 
 @main_page.route("/", methods=["POST", "GET"])
 def save_url():
+    """Добавляет сайт в базу данных"""
     if request.method == 'POST':
         repo = UrlRepository()
         data = request.form.to_dict()
@@ -50,7 +51,7 @@ def save_url():
 
 
 def is_valid_url(url):
-    """Проверка URL с помощью библиотеки validators"""
+    """Проверяет URL с помощью библиотеки validators"""
     try:
         return validate_url(url)
     except ValidationError:
@@ -58,6 +59,7 @@ def is_valid_url(url):
 
 
 def normalized_url(data):
+    """Нормализует адрес сайта"""
     lower_case_url = data['url'].lower()
     parsed_url = urlparse(lower_case_url)
     components = (
@@ -72,16 +74,9 @@ def normalized_url(data):
     return normalized_url
 
 
-@main_page.route('/urls', methods=['POST'])
-def uncorrect_url():
-    data = request.form.to_dict()
-    if not is_valid_url(data['url']):
-        conn.close()
-        return render_template('index.html')
-
-
 @main_page.route('/urls', methods=['GET'])
 def url_list():
+    """Рендерит страницу со всеми сайтами"""
     if session.pop('from_uncorrect_url', False):
         return render_template('index.html'), 422
     repo = UrlRepository()
@@ -94,6 +89,7 @@ def url_list():
 
 @main_page.route('/urls/<id>', methods=['GET'])
 def url_id(id):
+    """Рендерит страницу конкретного сайта"""
     repo = UrlRepository()
     repo_2 = UrlCheckRepository()
     check_id = repo_2.get_check_id(id)

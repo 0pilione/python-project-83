@@ -4,6 +4,7 @@ from page_analyzer.models.base_repo import BaseRepository
 class UrlCheckRepository(BaseRepository):
 
     def get_check_id(self, id):
+        """Достает всю информацию по конкретной проверке"""
         with self.get_cursor() as cur:
             cur.execute(
                 "SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC ",
@@ -12,12 +13,14 @@ class UrlCheckRepository(BaseRepository):
             return [dict(row) for row in cur]
 
     def save(self, check):
+        """Сохраняет проверку"""
         if "id" in check and check["id"]:
             self._update(check)
         else:
             self._create(check)
 
     def _update(self, check):
+        """Обновляет проверку"""
         with self.get_cursor() as cur:
             cur.execute(
                 """
@@ -42,6 +45,7 @@ class UrlCheckRepository(BaseRepository):
             )
 
     def _create(self, check):
+        """Создает проверку"""
         with self.get_cursor() as cur:
             cur.execute(
                 """

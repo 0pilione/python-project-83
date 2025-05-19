@@ -12,6 +12,7 @@ from page_analyzer.models.repo import UrlRepository
 
 @check_page.route('/urls/<int:id>/checks', methods=['POST'])
 def save_check(id):
+    '''Сохраняет проверку'''
     current_time = datetime.now()
     repo = UrlCheckRepository()
     response = check_response(id)
@@ -34,6 +35,7 @@ def save_check(id):
 
 
 def check_response(id):
+    '''Выполняет проверку доступности URL-адреса'''
     repo = UrlRepository()
     get_check = repo.get_id(id)
     for check in get_check:
