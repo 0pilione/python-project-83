@@ -1,7 +1,7 @@
 [project]
 name = "hexlet-code"
 version = "0.1.0"
-description = "Add your description here"
+description = "Сайт, который анализирует указанные страницы на SEO-пригодность по аналогии с PageSpeed Insights."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
