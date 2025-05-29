@@ -35,6 +35,16 @@ make dev
 
 Проект можно использовать локально и онлайн (например с помощью стороннего сервиса render.com).
 
+Использованные технологии:
+
+1. Python
+2. flask
+3. PostgreSQL
+4. HTML
+5. Bootstrap
+6. uv
+7. gunicorn
+
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/0pilione/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/0pilione/python-project-83/actions)
 [![GitHub Actions Demo](https://github.com/0pilione/python-project-83/actions/workflows/github-actions-demo.yml/badge.svg)](https://github.com/0pilione/python-project-83/actions/workflows/github-actions-demo.yml)
