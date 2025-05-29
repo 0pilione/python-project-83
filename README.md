@@ -1,6 +1,7 @@
 Сайт, который анализирует указанные страницы на SEO-пригодность по аналогии с PageSpeed Insights. 
 
 Установка
+
 1. Склонируйте репозиторий с проектом на ваше локальное устройство:
 git clone https://github.com/0pilione/python-project-83.git
 2. Перейдите в директорию проекта:
@@ -13,6 +14,7 @@ cp .env.example .env
 Затем запустите команды из database.sql в SQL-консоли вашей базы данных, чтобы создать необходимые таблицы.
 
 Использование
+
 Для запуска сервера Flask с помощью Gunicorn выполните команду:
 make start
 По умолчанию сервер будет доступен по адресу http://0.0.0.0:8000.
@@ -30,7 +32,6 @@ make dev
 Способы использования
 Проект можно использовать локально и онлайн (например с помощью стороннего сервиса render.com).
 
-Смотреть здесь! https://python-project-83-sbm9.onrender.com/
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/0pilione/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/0pilione/python-project-83/actions)
 [![GitHub Actions Demo](https://github.com/0pilione/python-project-83/actions/workflows/github-actions-demo.yml/badge.svg)](https://github.com/0pilione/python-project-83/actions/workflows/github-actions-demo.yml)
